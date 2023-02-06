@@ -33,8 +33,26 @@ void test_rb_available() {
     rb_deinit(&rb);
 }
 
+void test_rb_used() {
+    struct rb rb;
+    rb_init(&rb, 8);
+    rb.w = 6;
+    rb.r = 3;
+    eqint(3, rb_used(&rb));
+
+    rb.w = 3;
+    rb.r = 6;
+    eqint(5, rb_used(&rb));
+
+    rb.w = 6;
+    rb.r = 6;
+    eqint(0, rb_used(&rb));
+    rb_deinit(&rb);
+}
+
 int main() {
     test_rb_init();
     test_rb_available();
+    test_rb_used();
     return EXIT_SUCCESS;
 }

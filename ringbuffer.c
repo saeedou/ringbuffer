@@ -33,3 +33,10 @@ rb_available(struct rb *b) {
         return available;
     }
 }
+
+int
+rb_used(struct rb *b) {
+    int used;
+    used = b->size - rb_available(b);
+    return used;
+}
