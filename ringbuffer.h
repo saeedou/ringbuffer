@@ -1,3 +1,7 @@
+#ifndef RINGBUFFER_H
+#define RINGBUFFER_H
+
+
 #include <stddef.h>
 
 
@@ -19,3 +23,6 @@ rb_available(struct rb *rb);
 
 int
 rb_used(struct rb *rb);
+
+
+#endif
