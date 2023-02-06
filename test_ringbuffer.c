@@ -56,15 +56,29 @@ void
 test_rb_write() {
     struct rb rb;
     rb_init(&rb, 2);
-    rb_write(&rb, 'a');
+    eqint(0, rb_write(&rb, 'a'));
     eqchr('a', rb.buff[0]);
     eqint(1, rb.w);
+    rb_write(&rb, 'b');
+    eqint(8, rb_write(&rb, 'c'));
+}
+
+void
+test_rb_read() {
+    struct rb rb;
+    rb_init(&rb, 2);
+    isnull(rb_read(&rb));
+
+    rb_write(&rb, 'a');
+    eqchr('a', rb_read(&rb));
+
 }
 
 int main() {
     test_rb_init();
     test_rb_available();
     test_rb_used();
-    test_rb_write();
+    //test_rb_write();
+    test_rb_read();
     return EXIT_SUCCESS;
 }

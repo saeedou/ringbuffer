@@ -49,7 +49,18 @@ rb_write(struct rb *b, char c) {
         b->w++;
         return EXIT_SUCCESS;
     } else {
-        printf("Ring buffer is full.");
+        //printf("Ring buffer is full.");
         return EXIT_FAILURE;
+    }
+}
+
+char
+rb_read(struct rb *b) {
+    if (rb_used(b) == 0) {
+        return NULL;
+    } else {
+        char hold_char= b->buff[b->r];
+        b->r++;
+        return hold_char;
     }
 }
