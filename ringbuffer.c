@@ -1,5 +1,6 @@
 #include <stddef.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "ringbuffer.h"
 
@@ -39,4 +40,16 @@ rb_used(struct rb *b) {
     int used;
     used = b->size - rb_available(b);
     return used;
+}
+
+int
+rb_write(struct rb *b, char c) {
+    if (rb_available(b) > 0) {
+        b->buff[b->w] = c;
+        b->w++;
+        return EXIT_SUCCESS;
+    } else {
+        printf("Ring buffer is full.");
+        return EXIT_FAILURE;
+    }
 }

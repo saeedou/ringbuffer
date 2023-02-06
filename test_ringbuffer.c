@@ -16,7 +16,8 @@ test_rb_init() {
 //test_deinit(){
 //}
 
-void test_rb_available() {
+void
+test_rb_available() {
     struct rb rb;
     rb_init(&rb, 8);
     rb.w = 6;
@@ -33,7 +34,8 @@ void test_rb_available() {
     rb_deinit(&rb);
 }
 
-void test_rb_used() {
+void
+test_rb_used() {
     struct rb rb;
     rb_init(&rb, 8);
     rb.w = 6;
@@ -50,9 +52,19 @@ void test_rb_used() {
     rb_deinit(&rb);
 }
 
+void
+test_rb_write() {
+    struct rb rb;
+    rb_init(&rb, 2);
+    rb_write(&rb, 'a');
+    eqchr('a', rb.buff[0]);
+    eqint(1, rb.w);
+}
+
 int main() {
     test_rb_init();
     test_rb_available();
     test_rb_used();
+    test_rb_write();
     return EXIT_SUCCESS;
 }
