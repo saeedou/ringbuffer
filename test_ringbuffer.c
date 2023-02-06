@@ -60,7 +60,7 @@ test_rb_write() {
     eqchr('a', rb.buff[0]);
     eqint(1, rb.w);
     rb_write(&rb, 'b');
-    eqint(8, rb_write(&rb, 'c'));
+    eqint(1, rb_write(&rb, 'c'));
 }
 
 void
@@ -78,7 +78,7 @@ int main() {
     test_rb_init();
     test_rb_available();
     test_rb_used();
-    //test_rb_write();
+    test_rb_write();
     test_rb_read();
     return EXIT_SUCCESS;
 }
