@@ -20,3 +20,16 @@ rb_deinit(struct rb *b) {
         free(b->buff);
     }
 }
+
+int
+rb_available(struct rb *b) {
+    if (b->w >= b->r) {
+        int available;
+        available = b->size - (b->w - b->r);
+        return available;
+    } else if (b->w < b->r) {
+        int available;
+        available = b->r - b->w;
+        return available;
+    }
+}
