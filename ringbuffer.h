@@ -24,5 +24,11 @@ rb_available(struct rb *rb);
 int
 rb_used(struct rb *rb);
 
+int
+rb_write(struct rb *rb, char c);
+
+char
+rb_read(struct rb *rb);
+
 
 #endif
