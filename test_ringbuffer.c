@@ -60,7 +60,7 @@ test_rb_write() {
     eqchr('a', rb.buff[0]);
     eqint(1, rb.w);
     rb_write(&rb, 'b');
-    eqint(1, rb_write(&rb, 'c'));
+    eqint(-1, rb_write(&rb, 'c'));
 }
 
 void

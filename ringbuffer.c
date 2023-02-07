@@ -47,10 +47,10 @@ rb_write(struct rb *b, char c) {
     if (rb_available(b) > 0) {
         b->buff[b->w] = c;
         b->w++;
-        return EXIT_SUCCESS;
+        return 0;
     } else {
         //printf("Ring buffer is full.");
-        return EXIT_FAILURE;
+        return -1;
     }
 }
 
