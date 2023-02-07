@@ -48,24 +48,26 @@ rb_used(struct rb *b) {
 
 
 int
-rb_write(struct rb *b, char c) {
-    if (rb_available(b) == 0) {
+rb_write(struct rb *b, char *char_arr, int arr_length) {
+    if (rb_available(b) == 0 && rb_available(b) < arr_length) {
         return -1;
     }
 
-    b->buff[b->w] = c;
-    b->w++;
+    for (int i = 0; i < arr_length; i++) {
+        b->buff[b->w] = char_arr[i];
+        b->w++;
+    }
     return 0;
 }
 
 
-char
-rb_read(struct rb *b) {
-    if (rb_used(b) == 0) {
-        return NULL;
-    } else {
-        char hold_char= b->buff[b->r];
-        b->r++;
-        return hold_char;
-    }
-}
+//char
+//rb_read(struct rb *b) {
+//    if (rb_used(b) == 0) {
+//        return NULL;
+//    } else {
+//        char hold_char= b->buff[b->r];
+//        b->r++;
+//        return hold_char;
+//    }
+//}

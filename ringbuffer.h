@@ -25,7 +25,7 @@ int
 rb_used(struct rb *rb);
 
 int
-rb_write(struct rb *rb, char c);
+rb_write(struct rb *b, char *char_arr, int arr_length);
 
 char
 rb_read(struct rb *rb);
