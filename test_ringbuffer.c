@@ -76,16 +76,17 @@ test_rb_write() {
 }
 
 
-//void
-//test_rb_read() {
-//    struct rb rb;
-//    rb_init(&rb, 2);
-//    isnull(rb_read(&rb));
-//
-//    rb_write(&rb, 'a');
-//    eqchr('a', rb_read(&rb));
-//
-//}
+void
+test_rb_read() {
+    struct rb rb;
+    char char_sample = 'a';
+    rb_init(&rb, 2);
+    isnull(rb_read(&rb));
+
+    rb_write(&rb, &char_sample, 1);
+    eqchr('a', rb_read(&rb));
+
+}
 
 
 int main() {
@@ -93,6 +94,6 @@ int main() {
     test_rb_available();
     test_rb_used();
     test_rb_write();
-    //test_rb_read();
+    test_rb_read();
     return EXIT_SUCCESS;
 }

@@ -61,13 +61,13 @@ rb_write(struct rb *b, char *char_arr, int arr_length) {
 }
 
 
-//char
-//rb_read(struct rb *b) {
-//    if (rb_used(b) == 0) {
-//        return NULL;
-//    } else {
-//        char hold_char= b->buff[b->r];
-//        b->r++;
-//        return hold_char;
-//    }
-//}
+char
+rb_read(struct rb *b) {
+    if (rb_used(b) == 0) {
+        return NULL;
+    } else {
+        char hold_char= b->buff[b->r];
+        b->r++;
+        return hold_char;
+    }
+}
