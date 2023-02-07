@@ -15,12 +15,14 @@ rb_init(struct rb *b, size_t size) {
     return 0;
 }
 
+
 void
 rb_deinit(struct rb *b) {
     if (b->buff != NULL) {
         free(b->buff);
     }
 }
+
 
 int
 rb_available(struct rb *b) {
@@ -35,24 +37,27 @@ rb_available(struct rb *b) {
     }
 }
 
+
 int
 rb_used(struct rb *b) {
     int used;
+
     used = b->size - rb_available(b);
     return used;
 }
 
+
 int
 rb_write(struct rb *b, char c) {
-    if (rb_available(b) > 0) {
-        b->buff[b->w] = c;
-        b->w++;
-        return 0;
-    } else {
-        //printf("Ring buffer is full.");
+    if (rb_available(b) == 0) {
         return -1;
     }
+
+    b->buff[b->w] = c;
+    b->w++;
+    return 0;
 }
+
 
 char
 rb_read(struct rb *b) {

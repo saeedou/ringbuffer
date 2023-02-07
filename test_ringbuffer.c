@@ -12,9 +12,11 @@ test_rb_init() {
     rb_deinit(&rb);
 }
 
+
 //void
 //test_deinit(){
 //}
+
 
 void
 test_rb_available() {
@@ -34,6 +36,7 @@ test_rb_available() {
     rb_deinit(&rb);
 }
 
+
 void
 test_rb_used() {
     struct rb rb;
@@ -52,6 +55,7 @@ test_rb_used() {
     rb_deinit(&rb);
 }
 
+
 void
 test_rb_write() {
     struct rb rb;
@@ -63,6 +67,7 @@ test_rb_write() {
     eqint(-1, rb_write(&rb, 'c'));
 }
 
+
 void
 test_rb_read() {
     struct rb rb;
@@ -73,6 +78,7 @@ test_rb_read() {
     eqchr('a', rb_read(&rb));
 
 }
+
 
 int main() {
     test_rb_init();
