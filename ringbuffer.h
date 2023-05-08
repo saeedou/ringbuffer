@@ -12,7 +12,7 @@ struct SNAME {
 };
 
 
-void
+int
 MKFNAME(reset) (struct rb *rb);
 
 
@@ -26,6 +26,10 @@ MKFNAME(put) (struct rb *b, T *data, int size);
 
 int
 MKFNAME(pop) (struct rb *b, T *data, int size);
+
+
+int
+is_power_of_two();
 
 
 #endif

@@ -35,7 +35,7 @@ test_cq_reset() {
     memset(rb.buff, 0, RBSIZE);
     strcpy(rb.buff, "hello");
 
-    cq_reset(&rb);
+    eqint(0, cq_reset(&rb));
 
     eqint(0, rb.w);
     eqint(0, rb.r);
@@ -98,5 +98,14 @@ main() {
     test_cq_available();
     test_cq_put();
     test_cq_pop();
+
+
+    // When RBSIZE is not power of two
+    #include "test_not_power_of_two.c"
+    test_cq_reset();
+    test_cq_available();
+    test_cq_put();
+    test_cq_pop();
+ 
     return EXIT_SUCCESS;
 }
