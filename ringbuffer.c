@@ -48,25 +48,26 @@ MKFNAME(available) (struct rb *b) {
 
 
 int
-MKFNAME(put) (struct rb *b, T *date, int size) {
+MKFNAME(put) (struct rb *b, T *data, int size) {
     if (is_power_of_two() == -1) {
         return -1;
     }
 
-   if (MKFNAME(available)(b) < size) {
-       return -1;
-   }
-
-   for (int i = 0; i < size; i++) {
-       b->buff[b->w] = date[i];
-       b->w = (b->w + 1) % RBSIZE;
-   }
-   return 0;
+    if (MKFNAME(available)(b) < size) {
+        return -1;
+    }
+ 
+    for (int i = 0; i < size; i++) {
+        b->buff[b->w] = data[i];
+ 
+        b->w = (b->w + 1) & (RBSIZE - 1);
+    }
+    return 0;
 }
 
 
 int
-MKFNAME(pop)(struct rb *b, T *date, int size) {
+MKFNAME(pop)(struct rb *b, T *data, int size) {
     if (is_power_of_two() == -1) {
         return -1;
     }
@@ -80,9 +81,9 @@ MKFNAME(pop)(struct rb *b, T *date, int size) {
     }
 
     for (int i = 0; i < size; i++) {
-        buffindex = (b->r + i) % RBSIZE;
-        date[i] = b->buff[buffindex];
+        data[i] = b->buff[b->r];
+        b->r = (b->r + 1) & (RBSIZE - 1);
     }
-    b->r = (b->r + size) % RBSIZE;
+
     return 0;
 }
