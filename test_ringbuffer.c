@@ -65,11 +65,14 @@ test_cq_put() {
     struct rb rb;
     char towrite[6] = "abcdef";
     char cq_sample = 's';
-
     cq_reset(&rb);
+    rb.w = 4;
+    rb.r = 4;
+
     eqint(0, cq_put(&rb, towrite, sizeof(towrite)));
-    eqstr("abcdef", rb.buff);
-    eqint(6, rb.w);
+    eqnstr("ef", rb.buff, 2);
+    eqnstr("abcd", rb.buff + 4, 4);
+    eqint(2, rb.w);
 
     cq_put(&rb, &cq_sample, 1);
 

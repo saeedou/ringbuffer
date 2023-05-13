@@ -53,13 +53,13 @@ MKFNAME(put) (struct rb *b, T *date, int size) {
         return -1;
     }
 
-   if (MKFNAME(available)(b) == 0 || MKFNAME(available)(b) < size) {
+   if (MKFNAME(available)(b) < size) {
        return -1;
    }
 
    for (int i = 0; i < size; i++) {
        b->buff[b->w] = date[i];
-       b->w++;
+       b->w = (b->w + 1) % RBSIZE;
    }
    return 0;
 }
