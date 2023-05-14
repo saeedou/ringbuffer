@@ -49,6 +49,8 @@ MKFNAME(available) (struct rb *b) {
 
 int
 MKFNAME(put) (struct rb *b, T *data, int size) {
+    int linear_empty_size;
+
     if (is_power_of_two() == -1) {
         return -1;
     }
@@ -56,12 +58,15 @@ MKFNAME(put) (struct rb *b, T *data, int size) {
     if (MKFNAME(available)(b) < size) {
         return -1;
     }
- 
-    for (int i = 0; i < size; i++) {
-        b->buff[b->w] = data[i];
- 
-        b->w = (b->w + 1) & (RBSIZE - 1);
+
+    linear_empty_size = RBSIZE - b->w;
+    memcpy(b->buff + b->w, data, linear_empty_size);
+
+    if (size > linear_empty_size) {
+        memcpy(b->buff, data + linear_empty_size, linear_empty_size);
     }
+
+    b->w = (b->w + size) & (RBSIZE - 1);
     return 0;
 }
 
@@ -73,17 +78,20 @@ MKFNAME(pop)(struct rb *b, T *data, int size) {
     }
 
     int used;
-    int buffindex;
+    int linear_used_size;
 
     used = RBSIZE - MKFNAME(available)(b) - 1;
     if (size > used) {
         return -1;
     }
 
-    for (int i = 0; i < size; i++) {
-        data[i] = b->buff[b->r];
-        b->r = (b->r + 1) & (RBSIZE - 1);
+    linear_used_size = RBSIZE - b->r;
+    memcpy(data, b->buff + b->r, linear_used_size);
+
+    if (size > linear_used_size) {
+        memcpy(data + linear_used_size, b->buff, linear_used_size);
     }
 
+    b->r = (b->r + size) & (RBSIZE - 1);
     return 0;
 }

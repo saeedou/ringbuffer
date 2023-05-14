@@ -84,13 +84,15 @@ void
 test_cq_pop() {
     struct rb rb;
     char towrite[6] = "abcdef";
-    char toread[4];
+    char toread[5];
     cq_reset(&rb);
+    rb.w = 4;
+    rb.r = 4;
 
     cq_put(&rb, towrite, sizeof(towrite));
     eqint(-1, cq_pop(&rb, toread, 7));
-    eqint(0, cq_pop(&rb, toread, 4));
-    eqint(4, rb.r);
+    eqint(0, cq_pop(&rb, toread, 5));
+    eqint(1, rb.r);
     eqnstr("abcd", toread, 4);
 }
 
