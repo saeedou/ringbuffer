@@ -1,0 +1,103 @@
+#include <cutest.h>
+#include <clog.h>
+
+
+typedef uint8_t u8;
+#undef CRING_TYPE
+#define CRING_TYPE u8
+
+#include "cring.h"
+#include "cring.c"
+
+
+void
+test_init() {
+    struct u8queue q;
+    
+    eqint(0, u8queue_init(&q, 2));
+    eqint(2, q.bits);
+    eqint(0, q.r);
+    eqint(0, q.w);
+    eqint(3, u8queue_size(&q));
+}
+
+// void
+// test_cq_reset() {
+//     struct rb rb;
+//     rb.w = 4;
+//     rb.r = 4;
+//     memset(rb.buff, 0, RBSIZE);
+//     strcpy(rb.buff, "hello");
+// 
+//     eqint(0, cq_reset(&rb));
+// 
+//     eqint(0, rb.w);
+//     eqint(0, rb.r);
+//     eqint(0, strlen(rb.buff));
+// }
+//
+//
+// void
+// test_cq_available() {
+//     struct rb rb;
+//     rb.w = 6;
+//     rb.r = 3;
+//     eqint(4, cq_available(&rb));
+// 
+//     rb.w = 3;
+//     rb.r = 6;
+//     eqint(2, cq_available(&rb));
+// 
+//     rb.w = 6;
+//     rb.r = 6;
+//     eqint(7, cq_available(&rb));
+// }
+// 
+// 
+// void
+// test_cq_put() {
+//     struct rb rb;
+//     char towrite[6] = "abcdef";
+//     char cq_sample = 's';
+//     cq_reset(&rb);
+//     rb.w = 4;
+//     rb.r = 4;
+// 
+//     eqint(0, cq_put(&rb, towrite, sizeof(towrite)));
+//     eqnstr("ef", rb.buff, 2);
+//     eqnstr("abcd", rb.buff + 4, 4);
+//     eqint(2, rb.w);
+// 
+//     cq_put(&rb, &cq_sample, 1);
+// 
+//     eqint(-1, cq_put(&rb, &cq_sample, 1));
+// }
+// 
+// 
+// void
+// test_cq_pop() {
+//     struct rb rb;
+//     char towrite[6] = "abcdef";
+//     char toread[5];
+//     cq_reset(&rb);
+//     rb.w = 4;
+//     rb.r = 4;
+// 
+//     cq_put(&rb, towrite, sizeof(towrite));
+//     eqint(-1, cq_pop(&rb, toread, 7));
+//     eqint(0, cq_pop(&rb, toread, 5));
+//     eqint(1, rb.r);
+//     eqnstr("abcd", toread, 4);
+// }
+
+
+int
+main() {
+    // test_cq_reset();
+    // test_cq_available();
+    // test_cq_put();
+    // test_cq_pop();
+
+    test_init();
+    return EXIT_SUCCESS;
+}
