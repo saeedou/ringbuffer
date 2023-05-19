@@ -2,6 +2,9 @@
 #define CRING_COMMON
 
 
+#include <unistd.h>
+
+
 #ifndef CRING_COMMON_NAME
 #define CRING_COMMON_NAME   buff
 #endif
@@ -55,7 +58,7 @@
 
 
 static size_t
-_calcsize (uint8_t bits) {
+_calcsize (unsigned char bits) {
     size_t s = 0;
     
     for (; bits > 0; bits--) {
@@ -80,3 +83,41 @@ typedef struct CRING_STRUCT() {
     
     CRING_TYPE *buffer;
 } CRING_T();
+
+
+int
+CRING_NAME(init) (CRING_T() *q, unsigned char bits);
+
+
+int
+CRING_NAME(deinit) (CRING_T() *q);
+
+
+int
+CRING_NAME(put) (CRING_T() *q, CRING_TYPE *data, size_t count);
+
+
+ssize_t
+CRING_NAME(pop) (CRING_T() *q, CRING_TYPE *data, size_t count);
+
+
+/** Read from fd into the buffer utill EAGAIN.
+ * count argument contains the count of inserted items.
+ * Return Value: 
+ *   On success, the number of bytes read is returned.
+ *   Zero indicates end of file.
+ *   On error, -1 is returned, and errno is set appropriately.  
+ */
+ssize_t
+CRING_NAME(readput) (CRING_T() *q, int fd);
+
+
+/** Write ro fd from the buffer utill EAGAIN.
+ * count argument contains the count of inserted items.
+ * Return Value: 
+ *   On success, the number of items write is returned.
+ *   Zero indicates end of file.
+ *   On error, -1 is returned, and errno is set appropriately.  
+ */
+ssize_t
+CRING_NAME(popwrite) (CRING_T() *q, int fd);

@@ -4,7 +4,7 @@
 
 
 int
-CRING_NAME(init) (CRING_T() *q, uint8_t bits) {
+CRING_NAME(init) (CRING_T() *q, unsigned char bits) {
     q->size = _calcsize(bits);
     q->buffer = malloc(q->size + 1);
     if (q->buffer == NULL) {
