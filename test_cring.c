@@ -1,7 +1,5 @@
 #include <cutest.h>
 #include <clog.h>
-#include <unistd.h>
-#include <errno.h>
 #include <fcntl.h>
 
 
@@ -25,7 +23,7 @@ rand_open() {
 
 void
 test_u8buff_init_deinit() {
-    struct u8buff q;
+    u8buff_t q;
     
     eqint(0, u8buff_init(&q, 2));
     eqint(0, q.r);
@@ -196,5 +194,6 @@ int main() {
     test_u8buff_isfull_isempty();
     test_u8buff_put();
     test_u8buff_readput_popwrite();
+
     return EXIT_SUCCESS;
 }

@@ -1,4 +1,6 @@
 #include <stdlib.h>
+#include <errno.h>
+#include <unistd.h>
 
 
 int
