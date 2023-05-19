@@ -34,7 +34,7 @@ CRING_NAME(deinit) (CRING_T() *q) {
 
 
 int
-CRING_NAME(enqueue) (CRING_T() *q, CRING_TYPE *data, size_t count) {
+CRING_NAME(put) (CRING_T() *q, CRING_TYPE *data, size_t count) {
     if (CRING_AVAILABLE(q) < count) {
         return -1;
     }
@@ -55,7 +55,7 @@ CRING_NAME(enqueue) (CRING_T() *q, CRING_TYPE *data, size_t count) {
 
 
 ssize_t
-CRING_NAME(dequeue) (CRING_T() *q, CRING_TYPE *data, size_t count) {
+CRING_NAME(pop) (CRING_T() *q, CRING_TYPE *data, size_t count) {
     if (CRING_USED(q) < count) {
         return -1;
     }

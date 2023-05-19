@@ -1,13 +1,17 @@
-/* Generic stuff */
-
 #ifndef CRING_COMMON
 #define CRING_COMMON
 
 
+#ifndef CRING_COMMON_NAME
+#define CRING_COMMON_NAME   buff
+#endif
+
+
+/* Generic stuff */
 #define CRING_PASTER(x, y) x ## y
 #define CRING_EVALUATOR(x, y) CRING_PASTER(x, y)
-#define CRING_STRUCT() CRING_EVALUATOR(CRING_TYPE, queue)
-#define CRING_T() CRING_EVALUATOR(CRING_TYPE, queue_t)
+#define CRING_STRUCT() CRING_EVALUATOR(CRING_TYPE, CRING_COMMON_NAME)
+#define CRING_T() CRING_EVALUATOR(CRING_TYPE, CRING_COMMON_NAME ## _t)
 
 #define CRING_NAME_PASTER(x, y) x ## _ ## y
 #define CRING_NAME_EVALUATOR(x, y) CRING_NAME_PASTER(x, y)
@@ -25,6 +29,8 @@
     (b)->reader = 0; \
     (b)->writer = 0; \
 })
+#define CRING_ISEMPTY(b)          (CRING_USED(b) == 0)
+#define CRING_ISFULL(b)           (CRING_AVAILABLE(b) == 0)
 
 
 #define CRING_USED_TOEND(b) \
