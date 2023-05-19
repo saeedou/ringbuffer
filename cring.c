@@ -76,3 +76,123 @@ CRING_NAME(pop) (CRING_T() *q, CRING_TYPE *data, size_t count) {
    
     return total;
 }
+
+
+/** Read from fd into the buffer utill EAGAIN.
+ * count argument contains the count of inserted items.
+ * Return Value: 
+ *   On success, the number of bytes read is returned.
+ *   Zero indicates end of file.
+ *   On error, -1 is returned, and errno is set appropriately.  
+ */
+ssize_t
+CRING_NAME(readput) (CRING_T() *q, int fd) {
+    int avail;
+    int toend;
+    ssize_t firstbytes;
+    ssize_t secondbytes;
+
+    if (CRING_ISFULL(q)) {
+        /* Buffer is full */
+        errno = ENOBUFS;
+        return -1;
+    }
+
+    toend = CRING_FREE_TOEND(q);
+    firstbytes = read(fd, q->buffer + q->w, toend);
+    if (firstbytes == 0) {
+        /* EOF */
+        return 0;
+    }
+
+    if (firstbytes < 0) {
+        /* error */
+        return -1;
+    }
+
+    q->w = CRING_WRITER_CALC(q, firstbytes);;
+    avail = CRING_AVAILABLE(q);
+    if (avail == 0) {
+        /* Buffer is full */
+        return firstbytes;
+    }
+
+    secondbytes = read(fd, q->buffer + q->w, avail);
+    if (secondbytes == 0) {
+        /* EOF */
+        return firstbytes;
+    }
+
+    if (secondbytes < 0) {
+        if (EVMUSTWAIT()) {
+            /* Must wait */
+            errno = 0;
+            return firstbytes;
+        }
+        /* error */
+        return -1;
+    }
+
+    q->w = CRING_WRITER_CALC(q, secondbytes);
+    return firstbytes + secondbytes;
+}
+
+
+/** Write ro fd from the buffer utill EAGAIN.
+ * count argument contains the count of inserted items.
+ * Return Value: 
+ *   On success, the number of items write is returned.
+ *   Zero indicates end of file.
+ *   On error, -1 is returned, and errno is set appropriately.  
+ */
+ssize_t
+CRING_NAME(popwrite) (CRING_T() *q, int fd) {
+    int used;
+    int toend;
+    ssize_t firstbytes;
+    ssize_t secondbytes;
+
+    if (CRING_ISEMPTY(q)) {
+        /* Buffer is empty */
+        errno = ENOBUFS;
+        return -1;
+    }
+
+    toend = CRING_USED_TOEND(q);
+    firstbytes = write(fd, q->buffer + q->r, toend);
+    if (firstbytes == 0) {
+        /* EOF */
+        return 0;
+    }
+
+    if (firstbytes < 0) {
+        /* error */
+        return -1;
+    }
+
+    q->r = CRING_READER_CALC(q, firstbytes);;
+    used = CRING_USED(q);
+    if (used == 0) {
+        /* Buffer is empty */
+        return firstbytes;
+    }
+
+    secondbytes = write(fd, q->buffer + q->r, used);
+    if (secondbytes == 0) {
+        /* EOF */
+        return firstbytes;
+    }
+
+    if (secondbytes < 0) {
+        if (EVMUSTWAIT()) {
+            /* Must wait */
+            errno = 0;
+            return firstbytes;
+        }
+        /* error */
+        return -1;
+    }
+
+    q->w = CRING_READER_CALC(q, secondbytes);
+    return firstbytes + secondbytes;
+}

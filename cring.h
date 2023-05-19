@@ -49,6 +49,10 @@
 #define CRING_MIN(x, y) (((x) > (y))? (y): (x))
 
 
+#define EVMUSTWAIT() ((errno == EAGAIN) || (errno == EWOULDBLOCK) \
+        || (errno == EINPROGRESS))
+
+
 static size_t
 _calcsize (uint8_t bits) {
     size_t s = 0;
