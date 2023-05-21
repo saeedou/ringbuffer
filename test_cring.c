@@ -161,6 +161,7 @@ test_u8buff_readput_popwrite() {
     int ufd = rand_open();
     struct tfile infile = tmpfile_open();
     struct tfile outfile = tmpfile_open();
+    int bytes = 0;
 
     /* Provide some random data and put them */
     read(ufd, in, size);
@@ -168,7 +169,8 @@ test_u8buff_readput_popwrite() {
     lseek(infile.fd, 0, SEEK_SET);
 
     /* Read some data from fd into the buffer */
-    eqint(size, u8buff_readput(&q, infile.fd));
+    isfalse(u8buff_readput(&q, infile.fd, &bytes) == CFS_ERROR);
+    eqint(size, bytes);
     eqint(size, CRING_USED(&q));
 
     /* Write out */

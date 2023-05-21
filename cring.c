@@ -80,15 +80,8 @@ CRING_NAME(pop) (CRING_T() *q, CRING_TYPE *data, size_t count) {
 }
 
 
-/** Read from fd into the buffer utill EAGAIN.
- * count argument contains the count of inserted items.
- * Return Value: 
- *   On success, the number of bytes read is returned.
- *   Zero indicates end of file.
- *   On error, -1 is returned, and errno is set appropriately.  
- */
-ssize_t
-CRING_NAME(readput) (CRING_T() *q, int fd) {
+enum cring_filestatus
+CRING_NAME(readput) (CRING_T() *q, int fd, int *count) {
     int avail;
     int toend;
     ssize_t firstbytes;
@@ -96,47 +89,51 @@ CRING_NAME(readput) (CRING_T() *q, int fd) {
 
     if (CRING_ISFULL(q)) {
         /* Buffer is full */
-        errno = ENOBUFS;
-        return -1;
+        return CFS_BUFFERFULL;
     }
 
     toend = CRING_FREE_TOEND(q);
     firstbytes = read(fd, q->buffer + q->w, toend);
     if (firstbytes == 0) {
         /* EOF */
-        return 0;
+        return CFS_EOF;
     }
 
     if (firstbytes < 0) {
         /* error */
-        return -1;
+        return CFS_ERROR;
     }
-
+    
+    if (count) {
+        *count = firstbytes;
+    }
     q->w = CRING_WRITER_CALC(q, firstbytes);;
     avail = CRING_AVAILABLE(q);
     if (avail == 0) {
         /* Buffer is full */
-        return firstbytes;
+        return CFS_BUFFERFULL;
     }
 
     secondbytes = read(fd, q->buffer + q->w, avail);
     if (secondbytes == 0) {
         /* EOF */
-        return firstbytes;
+        return CFS_EOF;
     }
 
     if (secondbytes < 0) {
         if (EVMUSTWAIT()) {
             /* Must wait */
-            errno = 0;
-            return firstbytes;
+            return CFS_AGAIN;
         }
         /* error */
-        return -1;
+        return CFS_ERROR;
     }
 
+    if (count) {
+        *count = firstbytes + secondbytes;
+    }
     q->w = CRING_WRITER_CALC(q, secondbytes);
-    return firstbytes + secondbytes;
+    return CFS_OK;
 }
 
 

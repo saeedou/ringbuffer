@@ -69,6 +69,16 @@ _calcsize (unsigned char bits) {
 }
 
 
+enum cring_filestatus {
+    CFS_OK,
+    CFS_EOF,
+    CFS_ERROR,
+    CFS_AGAIN,
+    CFS_BUFFERFULL,
+    CFS_BUFFEREMPTY,
+};
+
+
 #endif
 
 
@@ -101,15 +111,8 @@ ssize_t
 CRING_NAME(pop) (CRING_T() *q, CRING_TYPE *data, size_t count);
 
 
-/** Read from fd into the buffer utill EAGAIN.
- * count argument contains the count of inserted items.
- * Return Value: 
- *   On success, the number of bytes read is returned.
- *   Zero indicates end of file.
- *   On error, -1 is returned, and errno is set appropriately.  
- */
-ssize_t
-CRING_NAME(readput) (CRING_T() *q, int fd);
+enum cring_filestatus
+CRING_NAME(readput) (CRING_T() *q, int fd, int *count);
 
 
 /** Write ro fd from the buffer utill EAGAIN.
