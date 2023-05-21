@@ -174,7 +174,8 @@ test_u8buff_readput_popwrite() {
     eqint(size, CRING_USED(&q));
 
     /* Write out */
-    eqint(size, u8buff_popwrite(&q, outfile.fd));
+    isfalse(u8buff_popwrite(&q, outfile.fd, &bytes) == CFS_ERROR);
+    eqint(size, bytes);
     eqint(0, CRING_USED(&q));
 
     /* Compare */
