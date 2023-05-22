@@ -43,6 +43,10 @@
 	  n < end ? n : end;})
 
 
+/*
+01234567
+  w r
+*/
 #define CRING_FREE_TOEND(b) \
 	({int end = (b)->size - (b)->w; \
 	  int n = (end + (b)->r) & (b)->size; \
@@ -109,6 +113,11 @@ CRING_NAME(put) (CRING_T() *q, CRING_TYPE *data, size_t count);
 
 ssize_t
 CRING_NAME(pop) (CRING_T() *q, CRING_TYPE *data, size_t count);
+
+
+ssize_t
+CRING_NAME(popuntil) (CRING_T() *q, CRING_TYPE c, CRING_TYPE *data, 
+        size_t count);
 
 
 enum cring_filestatus

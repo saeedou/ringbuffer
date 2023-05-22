@@ -80,6 +80,25 @@ CRING_NAME(pop) (CRING_T() *q, CRING_TYPE *data, size_t count) {
 }
 
 
+ssize_t
+CRING_NAME(popuntil) (CRING_T() *q, CRING_TYPE c, CRING_TYPE *data, 
+        size_t count) {
+    size_t topop = CRING_MIN(count, CRING_USED(q));
+    size_t r = 0;
+
+    while (r < topop) {
+        if (memcmp(&(q->buffer[CRING_READER_CALC(q, r)]), &c, 
+                    sizeof(CRING_TYPE)) == 0) {
+            return CRING_NAME(pop)(q, data, r+1);
+        }
+
+        r++;
+    }
+
+    return -1;
+}
+
+
 enum cring_filestatus
 CRING_NAME(readput) (CRING_T() *q, int fd, size_t *count) {
     int avail;
@@ -100,6 +119,10 @@ CRING_NAME(readput) (CRING_T() *q, int fd, size_t *count) {
     }
 
     if (firstbytes < 0) {
+        if (EVMUSTWAIT()) {
+            /* Must wait */
+            return CFS_AGAIN;
+        }
         /* error */
         return CFS_ERROR;
     }
@@ -114,6 +137,9 @@ CRING_NAME(readput) (CRING_T() *q, int fd, size_t *count) {
         return CFS_BUFFERFULL;
     }
 
+    if (firstbytes < toend) {
+        return CFS_OK;
+    }
     secondbytes = read(fd, q->buffer + q->w, avail);
     if (secondbytes == 0) {
         /* EOF */
@@ -157,6 +183,10 @@ CRING_NAME(popwrite) (CRING_T() *q, int fd, size_t *count) {
     }
 
     if (firstbytes < 0) {
+        if (EVMUSTWAIT()) {
+            /* Must wait */
+            return CFS_AGAIN;
+        }
         /* error */
         return CFS_ERROR;;
     }
@@ -164,11 +194,16 @@ CRING_NAME(popwrite) (CRING_T() *q, int fd, size_t *count) {
     if (count) {
         *count = firstbytes;
     }
+
     q->r = CRING_READER_CALC(q, firstbytes);;
     used = CRING_USED(q);
     if (used == 0) {
         /* Buffer is empty */
         return CFS_BUFFEREMPTY;
+    }
+
+    if (firstbytes < toend) {
+        return CFS_OK;
     }
 
     secondbytes = write(fd, q->buffer + q->r, used);
