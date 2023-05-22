@@ -161,7 +161,7 @@ test_u8buff_readput_popwrite() {
     int ufd = rand_open();
     struct tfile infile = tmpfile_open();
     struct tfile outfile = tmpfile_open();
-    int bytes = 0;
+    size_t bytes = 0;
 
     /* Provide some random data and put them */
     read(ufd, in, size);

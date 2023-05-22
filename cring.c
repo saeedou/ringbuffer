@@ -81,7 +81,7 @@ CRING_NAME(pop) (CRING_T() *q, CRING_TYPE *data, size_t count) {
 
 
 enum cring_filestatus
-CRING_NAME(readput) (CRING_T() *q, int fd, int *count) {
+CRING_NAME(readput) (CRING_T() *q, int fd, size_t *count) {
     int avail;
     int toend;
     ssize_t firstbytes;
@@ -138,7 +138,7 @@ CRING_NAME(readput) (CRING_T() *q, int fd, int *count) {
 
 
 enum cring_filestatus
-CRING_NAME(popwrite) (CRING_T() *q, int fd, int *count) {
+CRING_NAME(popwrite) (CRING_T() *q, int fd, size_t *count) {
     int used;
     int toend;
     ssize_t firstbytes;
