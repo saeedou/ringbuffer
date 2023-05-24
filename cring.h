@@ -126,3 +126,7 @@ CRING_NAME(readput) (CRING_T() *q, int fd, size_t *count);
 
 enum cring_filestatus
 CRING_NAME(popwrite) (CRING_T() *q, int fd, size_t *count);
+
+
+int
+CRING_NAME(reset) (CRING_T() *q);
