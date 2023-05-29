@@ -44,7 +44,7 @@ CRING_NAME(reset) (CRING_T() *q) {
 
 
 int
-CRING_NAME(put) (CRING_T() *q, CRING_TYPE *data, size_t count) {
+CRING_NAME(put) (CRING_T() *q, const CRING_TYPE *data, size_t count) {
     if (CRING_AVAILABLE(q) < count) {
         return -1;
     }

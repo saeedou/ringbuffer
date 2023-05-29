@@ -108,7 +108,7 @@ CRING_NAME(deinit) (CRING_T() *q);
 
 
 int
-CRING_NAME(put) (CRING_T() *q, CRING_TYPE *data, size_t count);
+CRING_NAME(put) (CRING_T() *q, const CRING_TYPE *data, size_t count);
 
 
 ssize_t
