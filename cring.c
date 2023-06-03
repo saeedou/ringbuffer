@@ -56,7 +56,6 @@ CRING_NAME(put) (CRING_T() *q, const CRING_TYPE *data, size_t count) {
 
     if (count > chunklen) {
         count -= chunklen;
-        DEBUG("Chunklen: %d %p %p", CRING_BYTES(count), q->buffer, q->buffer + q->w);
         memcpy(q->buffer, data + chunklen, CRING_BYTES(count));
         q->w += count;
     }
