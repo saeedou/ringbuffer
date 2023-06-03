@@ -6,7 +6,7 @@
 int
 CRING_NAME(init) (CRING_T() *q, unsigned char bits) {
     q->size = _calcsize(bits);
-    q->buffer = malloc(q->size + 1);
+    q->buffer = malloc(sizeof(CRING_TYPE) * (q->size + 1));
     if (q->buffer == NULL) {
         return -1;
     }
@@ -43,6 +43,7 @@ CRING_NAME(reset) (CRING_T() *q) {
 }
 
 
+#include <clog.h>
 int
 CRING_NAME(put) (CRING_T() *q, const CRING_TYPE *data, size_t count) {
     if (CRING_AVAILABLE(q) < count) {
@@ -51,11 +52,13 @@ CRING_NAME(put) (CRING_T() *q, const CRING_TYPE *data, size_t count) {
     
     size_t toend = CRING_FREE_TOEND(q);
     size_t chunklen = CRING_MIN(toend, count);
+    DEBUG("Chunklen: %d %p %p", CRING_BYTES(chunklen), q->buffer, q->buffer + q->w);
     memcpy(q->buffer + q->w, data, CRING_BYTES(chunklen));
     q->w = CRING_WRITER_CALC(q, chunklen);
 
     if (count > chunklen) {
         count -= chunklen;
+        DEBUG("Chunklen: %d %p %p", CRING_BYTES(count), q->buffer, q->buffer + q->w);
         memcpy(q->buffer, data + chunklen, CRING_BYTES(count));
         q->w += count;
     }
