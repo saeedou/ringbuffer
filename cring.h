@@ -53,7 +53,7 @@
 	  n <= end ? n : end + 1;})
 
 
-#define CRING_BYTES(n) (n * sizeof(CRING_TYPE))
+#define CRING_BYTES(n) ((n) * sizeof(CRING_TYPE))
 #define CRING_MIN(x, y) (((x) > (y))? (y): (x))
 
 

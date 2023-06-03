@@ -7,7 +7,7 @@
 int
 CRING_NAME(init) (CRING_T() *q, unsigned char bits) {
     q->size = _calcsize(bits);
-    q->buffer = malloc(sizeof(CRING_TYPE) * (q->size + 1));
+    q->buffer = malloc(CRING_BYTES(q->size + 1));
     if (q->buffer == NULL) {
         return -1;
     }
