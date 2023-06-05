@@ -115,6 +115,10 @@ ssize_t
 CRING_NAME(pop) (CRING_T() *q, CRING_TYPE *data, size_t count);
 
 
+int
+CRING_NAME(skip) (CRING_T() *q, size_t count);
+
+
 ssize_t
 CRING_NAME(popuntil) (CRING_T() *q, CRING_TYPE c, CRING_TYPE *data, 
         size_t count);

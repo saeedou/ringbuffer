@@ -38,6 +38,32 @@ test_u8buff_init_deinit() {
 
 
 void
+test_u8buff_skip() {
+    struct u8buff q;
+    u8buff_init(&q, 8);
+    size_t size = q.size;
+    char out[size];
+
+    /* Put 9 chars */
+    eqint(0, u8buff_put(&q, "foobarbaz", 9));
+
+    /* Skip 3 chars */
+    eqint(0, u8buff_skip(&q, 3));
+
+    /* Ger 3 chars from buffer */
+    eqint(3, u8buff_pop(&q, out, 3));
+    eqnstr("bar", out, 3);
+    
+    /* Skip another 3 chars */
+    eqint(0, u8buff_skip(&q, 3));
+    eqint(0, CRING_USED(&q));
+
+    /* Skip when buffer is empty */
+    eqint(-1, u8buff_skip(&q, 1));
+}
+
+
+void
 test_u8buff_put_pop() {
     /* Setup */
     struct u8buff q;
@@ -193,6 +219,7 @@ test_u8buff_readput_popwrite() {
 
 int main() {
     test_u8buff_init_deinit();
+    test_u8buff_skip();
     test_u8buff_put_pop();
     test_u8buff_isfull_isempty();
     test_u8buff_put();

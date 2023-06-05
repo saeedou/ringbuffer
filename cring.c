@@ -89,6 +89,21 @@ CRING_NAME(pop) (CRING_T() *q, CRING_TYPE *data, size_t count) {
 }
 
 
+int
+CRING_NAME(skip) (CRING_T() *q, size_t count) {
+    if (count == 0) {
+        return 0;
+    }
+
+    if (CRING_USED(q) < count) {
+        return -1;
+    }
+
+    q->r = CRING_READER_CALC(q, count);
+    return 0;
+}
+
+
 ssize_t
 CRING_NAME(popuntil) (CRING_T() *q, CRING_TYPE c, CRING_TYPE *data, 
         size_t count) {
