@@ -1,4 +1,22 @@
-#ifndef CRING_COMMON
+// Copyright 2023 Vahid Mardani
+/*
+ * This file is part of Carrow.
+ *  Carrow is free software: you can redistribute it and/or modify it under 
+ *  the terms of the GNU General Public License as published by the Free 
+ *  Software Foundation, either version 3 of the License, or (at your option) 
+ *  any later version.
+ *  
+ *  Carrow is distributed in the hope that it will be useful, but WITHOUT ANY 
+ *  WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
+ *  FOR A PARTICULAR PURPOSE. See the GNU General Public License for more 
+ *  details.
+ *  
+ *  You should have received a copy of the GNU General Public License along 
+ *  with Carrow. If not, see <https://www.gnu.org/licenses/>. 
+ *  
+ *  Author: Vahid Mardani <vahid.mardani@gmail.com>
+ */
+#ifndef CRING_COMMON  // NOLINT(build/header_guard)
 #define CRING_COMMON
 
 
@@ -38,9 +56,9 @@
 
 
 #define CRING_USED_TOEND(b) \
-	({int end = ((b)->size + 1) - (b)->r; \
-	  int n = ((b)->w + end) & (b)->size; \
-	  n < end ? n : end;})
+    ({int end = ((b)->size + 1) - (b)->r; \
+      int n = ((b)->w + end) & (b)->size; \
+      n < end ? n : end;})
 
 
 /*
@@ -48,9 +66,9 @@
   w r
 */
 #define CRING_FREE_TOEND(b) \
-	({int end = (b)->size - (b)->w; \
-	  int n = (end + (b)->r) & (b)->size; \
-	  n <= end ? n : end + 1;})
+    ({int end = (b)->size - (b)->w; \
+      int n = (end + (b)->r) & (b)->size; \
+      n <= end ? n : end + 1;})
 
 
 #define CRING_BYTES(n) ((n) * sizeof(CRING_TYPE))
@@ -62,9 +80,9 @@
 
 
 static size_t
-_calcsize (unsigned char bits) {
+_calcsize(unsigned char bits) {
     size_t s = 0;
-    
+
     for (; bits > 0; bits--) {
         s = (s << 1) | 1;
     }
@@ -94,7 +112,7 @@ typedef struct CRING_STRUCT() {
 
     /* Write/Head */
     int w;
-    
+
     CRING_TYPE *buffer;
 } CRING_T();
 
@@ -120,7 +138,7 @@ CRING_NAME(skip) (CRING_T() *q, size_t count);
 
 
 ssize_t
-CRING_NAME(popuntil) (CRING_T() *q, CRING_TYPE c, CRING_TYPE *data, 
+CRING_NAME(popuntil) (CRING_T() *q, CRING_TYPE c, CRING_TYPE *data,
         size_t count);
 
 

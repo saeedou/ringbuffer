@@ -19,6 +19,25 @@ install(FILES cring.h DESTINATION "include")
 install(FILES cring.c DESTINATION "include")
 
 
+# Lint
+set(PRETTYC_FLAGS
+    --recursive
+    --verbose=0
+    --repository=.
+    --extensions=c
+    --linelength=80
+    --headers=h,in
+    --includeorder=standardcfirst
+    --root=.
+    #--quiet
+    ${PROJECT_SOURCE_DIR}
+)
+add_custom_target(lint
+    COMMAND prettyc
+    ${PRETTYC_FLAGS}
+)
+
+
 # CPack
 set(CPACK_PACKAGE_FILE_NAME "libcring-${PROJECT_VERSION}")
 set(CPACK_SET_DESTDIR true)

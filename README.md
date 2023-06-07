@@ -24,6 +24,12 @@ cd build
 make install
 ```
 
+### Lint
+```bash
+cd build
+make lint
+```
+
 ### Debian package
 ```bash
 cd build

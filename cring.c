@@ -1,4 +1,22 @@
-#include <stdlib.h>
+// Copyright 2023 Vahid Mardani
+/*
+ * This file is part of Carrow.
+ *  Carrow is free software: you can redistribute it and/or modify it under 
+ *  the terms of the GNU General Public License as published by the Free 
+ *  Software Foundation, either version 3 of the License, or (at your option) 
+ *  any later version.
+ *  
+ *  Carrow is distributed in the hope that it will be useful, but WITHOUT ANY 
+ *  WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
+ *  FOR A PARTICULAR PURPOSE. See the GNU General Public License for more 
+ *  details.
+ *  
+ *  You should have received a copy of the GNU General Public License along 
+ *  with Carrow. If not, see <https://www.gnu.org/licenses/>. 
+ *  
+ *  Author: Vahid Mardani <vahid.mardani@gmail.com>
+ */
+#include <stdlib.h>  // NOLINT(build/include)
 #include <errno.h>
 #include <unistd.h>
 #include <string.h>
@@ -49,7 +67,7 @@ CRING_NAME(put) (CRING_T() *q, const CRING_TYPE *data, size_t count) {
     if (CRING_AVAILABLE(q) < count) {
         return -1;
     }
- 
+
     size_t toend = CRING_FREE_TOEND(q);
     size_t chunklen = CRING_MIN(toend, count);
     memcpy(q->buffer + q->w, data, CRING_BYTES(chunklen));
@@ -84,7 +102,7 @@ CRING_NAME(pop) (CRING_T() *q, CRING_TYPE *data, size_t count) {
         q->r += count;
         total += count;
     }
-   
+
     return total;
 }
 
@@ -131,7 +149,7 @@ CRING_NAME(readput) (CRING_T() *q, int fd, size_t *count) {
         /* error */
         return CFS_ERROR;
     }
-    
+
     if (count) {
         *count = firstbytes / CRING_BYTES(1);
     }

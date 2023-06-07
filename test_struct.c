@@ -1,8 +1,26 @@
-#include <cutest.h>
-#include <clog.h>
+// Copyright 2023 Vahid Mardani
+/*
+ * This file is part of Carrow.
+ *  Carrow is free software: you can redistribute it and/or modify it under 
+ *  the terms of the GNU General Public License as published by the Free 
+ *  Software Foundation, either version 3 of the License, or (at your option) 
+ *  any later version.
+ *  
+ *  Carrow is distributed in the hope that it will be useful, but WITHOUT ANY 
+ *  WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
+ *  FOR A PARTICULAR PURPOSE. See the GNU General Public License for more 
+ *  details.
+ *  
+ *  You should have received a copy of the GNU General Public License along 
+ *  with Carrow. If not, see <https://www.gnu.org/licenses/>. 
+ *  
+ *  Author: Vahid Mardani <vahid.mardani@gmail.com>
+ */
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/types.h>
+#include <clog.h>
+#include <cutest.h>
 
 
 typedef struct foo {
@@ -20,7 +38,7 @@ typedef struct foo {
 void
 test_foobuff_init_deinit() {
     struct foobuff q;
-    
+
     eqint(0, foobuff_init(&q, 2));
     eqint(0, q.r);
     eqint(0, q.w);
@@ -50,7 +68,7 @@ test_foobuff_put_pop() {
     struct foo baz;
     baz.a = 2;
     baz.b = 'b';
-    
+
     struct foo qux;
     qux.a = 3;
     qux.b = 'c';
@@ -72,7 +90,7 @@ test_foobuff_put_pop() {
 
     /* Populate the buffer */
     int i;
-    
+
     for (i = 0; i < 7; i++) {
         foobuff_put(&q, &bar, 1);
     }
@@ -90,8 +108,8 @@ test_foobuff_put_pop() {
     /* Teardown */
     foobuff_deinit(&q);
 }
- 
- 
+
+
 void
 test_foobuff_isfull_isempty() {
     /* Setup */
@@ -105,7 +123,7 @@ test_foobuff_isfull_isempty() {
     bar.b = 'a';
 
     istrue(CRING_ISEMPTY(&q));
- 
+
     /* Fill buffer */
     int i;
 

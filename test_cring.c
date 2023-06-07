@@ -1,6 +1,24 @@
+// Copyright 2023 Vahid Mardani
+/*
+ * This file is part of Carrow.
+ *  Carrow is free software: you can redistribute it and/or modify it under 
+ *  the terms of the GNU General Public License as published by the Free 
+ *  Software Foundation, either version 3 of the License, or (at your option) 
+ *  any later version.
+ *  
+ *  Carrow is distributed in the hope that it will be useful, but WITHOUT ANY 
+ *  WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
+ *  FOR A PARTICULAR PURPOSE. See the GNU General Public License for more 
+ *  details.
+ *  
+ *  You should have received a copy of the GNU General Public License along 
+ *  with Carrow. If not, see <https://www.gnu.org/licenses/>. 
+ *  
+ *  Author: Vahid Mardani <vahid.mardani@gmail.com>
+ */
+#include <fcntl.h>
 #include <cutest.h>
 #include <clog.h>
-#include <fcntl.h>
 
 
 typedef uint8_t u8;
@@ -24,7 +42,7 @@ rand_open() {
 void
 test_u8buff_init_deinit() {
     u8buff_t q;
-    
+
     eqint(0, u8buff_init(&q, 2));
     eqint(0, q.r);
     eqint(0, q.w);
@@ -53,7 +71,7 @@ test_u8buff_skip() {
     /* Ger 3 chars from buffer */
     eqint(3, u8buff_pop(&q, out, 3));
     eqnstr("bar", out, 3);
-    
+
     /* Skip another 3 chars */
     eqint(0, u8buff_skip(&q, 3));
     eqint(0, CRING_USED(&q));
