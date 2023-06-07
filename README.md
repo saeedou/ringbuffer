@@ -26,6 +26,7 @@ make install
 
 ### Lint
 ```bash
+pip install prettyc
 cd build
 make lint
 ```
