@@ -35,7 +35,7 @@ include(CTest)
 list(APPEND CMAKE_CTEST_ARGUMENTS "--output-on-failure")
 
 
-# Test
+# Test unsigned char
 add_executable(test_cring test_cring.c)
 target_include_directories(test_cring PUBLIC "${PROJECT_BINARY_DIR}")
 target_link_libraries(test_cring PUBLIC clog)
@@ -45,6 +45,19 @@ add_custom_target(profile_test_cring
     ${VALGRIND_FLAGS}
     $<TARGET_FILE:test_cring>
 )
+
+
+# Test struct
+add_executable(test_struct test_struct.c)
+target_include_directories(test_struct PUBLIC "${PROJECT_BINARY_DIR}")
+target_link_libraries(test_struct PUBLIC clog)
+add_test(NAME test_struct COMMAND test_struct)
+add_custom_target(profile_test_struct
+    COMMAND "valgrind" 
+    ${VALGRIND_FLAGS}
+    $<TARGET_FILE:test_struct>
+)
+
 endif()
 
 

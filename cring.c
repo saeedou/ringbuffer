@@ -49,7 +49,7 @@ CRING_NAME(put) (CRING_T() *q, const CRING_TYPE *data, size_t count) {
     if (CRING_AVAILABLE(q) < count) {
         return -1;
     }
-    
+ 
     size_t toend = CRING_FREE_TOEND(q);
     size_t chunklen = CRING_MIN(toend, count);
     memcpy(q->buffer + q->w, data, CRING_BYTES(chunklen));
@@ -104,25 +104,6 @@ CRING_NAME(skip) (CRING_T() *q, size_t count) {
 }
 
 
-ssize_t
-CRING_NAME(popuntil) (CRING_T() *q, CRING_TYPE c, CRING_TYPE *data, 
-        size_t count) {
-    size_t topop = CRING_MIN(count, CRING_USED(q));
-    size_t r = 0;
-
-    while (r < topop) {
-        if (memcmp(&(q->buffer[CRING_READER_CALC(q, r)]), &c, 
-                    sizeof(CRING_TYPE)) == 0) {
-            return CRING_NAME(pop)(q, data, r+1);
-        }
-
-        r++;
-    }
-
-    return -1;
-}
-
-
 enum cring_filestatus
 CRING_NAME(readput) (CRING_T() *q, int fd, size_t *count) {
     int avail;
@@ -136,7 +117,7 @@ CRING_NAME(readput) (CRING_T() *q, int fd, size_t *count) {
     }
 
     toend = CRING_FREE_TOEND(q);
-    firstbytes = read(fd, q->buffer + q->w, toend);
+    firstbytes = read(fd, q->buffer + q->w, CRING_BYTES(toend));
     if (firstbytes == 0) {
         /* EOF */
         return CFS_EOF;
@@ -152,19 +133,19 @@ CRING_NAME(readput) (CRING_T() *q, int fd, size_t *count) {
     }
     
     if (count) {
-        *count = firstbytes;
+        *count = firstbytes / CRING_BYTES(1);
     }
-    q->w = CRING_WRITER_CALC(q, firstbytes);;
+    q->w = CRING_WRITER_CALC(q, firstbytes / CRING_BYTES(1));
     avail = CRING_AVAILABLE(q);
     if (avail == 0) {
         /* Buffer is full */
         return CFS_BUFFERFULL;
     }
 
-    if (firstbytes < toend) {
+    if (firstbytes / CRING_BYTES(1) < toend) {
         return CFS_OK;
     }
-    secondbytes = read(fd, q->buffer + q->w, avail);
+    secondbytes = read(fd, q->buffer + q->w, CRING_BYTES(avail));
     if (secondbytes == 0) {
         /* EOF */
         return CFS_EOF;
@@ -180,9 +161,9 @@ CRING_NAME(readput) (CRING_T() *q, int fd, size_t *count) {
     }
 
     if (count) {
-        *count = firstbytes + secondbytes;
+        *count = (firstbytes + secondbytes) / CRING_BYTES(1);
     }
-    q->w = CRING_WRITER_CALC(q, secondbytes);
+    q->w = CRING_WRITER_CALC(q, secondbytes / CRING_BYTES(1));
     return CFS_OK;
 }
 
@@ -200,10 +181,10 @@ CRING_NAME(popwrite) (CRING_T() *q, int fd, size_t *count) {
     }
 
     toend = CRING_USED_TOEND(q);
-    firstbytes = write(fd, q->buffer + q->r, toend);
+    firstbytes = write(fd, q->buffer + q->r, CRING_BYTES(toend));
     if (firstbytes == 0) {
         /* EOF */
-        return CFS_EOF;;
+        return CFS_EOF;
     }
 
     if (firstbytes < 0) {
@@ -212,28 +193,28 @@ CRING_NAME(popwrite) (CRING_T() *q, int fd, size_t *count) {
             return CFS_AGAIN;
         }
         /* error */
-        return CFS_ERROR;;
+        return CFS_ERROR;
     }
 
     if (count) {
-        *count = firstbytes;
+        *count = firstbytes / CRING_BYTES(1);
     }
 
-    q->r = CRING_READER_CALC(q, firstbytes);;
+    q->r = CRING_READER_CALC(q, firstbytes / CRING_BYTES(1));
     used = CRING_USED(q);
     if (used == 0) {
         /* Buffer is empty */
-        return CFS_BUFFEREMPTY;
-    }
-
-    if (firstbytes < toend) {
         return CFS_OK;
     }
 
-    secondbytes = write(fd, q->buffer + q->r, used);
+    if (firstbytes < toend) {
+        return CFS_AGAIN;
+    }
+
+    secondbytes = write(fd, q->buffer + q->r, CRING_BYTES(used));
     if (secondbytes == 0) {
         /* EOF */
-        return CFS_EOF;;
+        return CFS_EOF;
     }
 
     if (secondbytes < 0) {
@@ -242,12 +223,12 @@ CRING_NAME(popwrite) (CRING_T() *q, int fd, size_t *count) {
             return CFS_AGAIN;
         }
         /* error */
-        return CFS_ERROR;;
+        return CFS_ERROR;
     }
 
     if (count) {
-        *count = firstbytes + secondbytes;
+        *count = (firstbytes + secondbytes) / CRING_BYTES(1);
     }
-    q->w = CRING_READER_CALC(q, secondbytes);
+    q->w = CRING_READER_CALC(q, secondbytes / CRING_BYTES(1));
     return CFS_OK;
 }
