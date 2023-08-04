@@ -67,7 +67,6 @@ CRING_NAME(put) (CRING_T() *q, const CRING_TYPE *data, size_t count) {
     if (CRING_AVAILABLE(q) < count) {
         return -1;
     }
-
     size_t toend = CRING_FREE_TOEND(q);
     size_t chunklen = CRING_MIN(toend, count);
     memcpy(q->buffer + q->w, data, CRING_BYTES(chunklen));
